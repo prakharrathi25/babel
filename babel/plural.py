@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     babel.numbers
     ~~~~~~~~~~~~~
@@ -72,7 +71,7 @@ def extract_operands(source):
     return n, i, v, w, f, t
 
 
-class PluralRule(object):
+class PluralRule:
     """Represents a set of language pluralization rules.  The constructor
     accepts a list of (tag, expr) tuples or a dict of `CLDR rules`_. The
     resulting object is callable and accepts one parameter with a positive or
@@ -146,9 +145,9 @@ class PluralRule(object):
         {'one': 'n is 1'}
         """
         _compile = _UnicodeCompiler().compile
-        return dict([(tag, _compile(ast)) for tag, ast in self.abstract])
+        return {tag: _compile(ast) for tag, ast in self.abstract}
 
-    tags = property(lambda x: frozenset([i[0] for i in x.abstract]), doc="""
+    tags = property(lambda x: frozenset(i[0] for i in x.abstract), doc="""
         A set of explicitly defined tags in this rule.  The implicit default
         ``'other'`` rules is not part of this set unless there is an explicit
         rule for it.""")
@@ -321,7 +320,7 @@ _VARS = 'nivwft'
 
 _RULES = [
     (None, re.compile(r'\s+', re.UNICODE)),
-    ('word', re.compile(r'\b(and|or|is|(?:with)?in|not|mod|[{0}])\b'
+    ('word', re.compile(r'\b(and|or|is|(?:with)?in|not|mod|[{}])\b'
                         .format(_VARS))),
     ('value', re.compile(r'\d+')),
     ('symbol', re.compile(r'%|,|!=|=')),
@@ -374,7 +373,7 @@ def negate(rv):
     return 'not', (rv,)
 
 
-class _Parser(object):
+class _Parser:
     """Internal parser.  This class can translate a single rule into an abstract
     tree of tuples. It implements the following grammar::
 
@@ -510,7 +509,7 @@ def _unary_compiler(tmpl):
 compile_zero = lambda x: '0'
 
 
-class _Compiler(object):
+class _Compiler:
     """The compilers are able to transform the expressions into multiple
     output formats.
     """

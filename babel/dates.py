@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     babel.dates
     ~~~~~~~~~~~
@@ -16,7 +15,6 @@
     :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import division
 
 import re
 import warnings
@@ -35,7 +33,7 @@ from babel.util import UTC, LOCALTZ
 #  empty set characters ( U+2205 )."
 #  - https://www.unicode.org/reports/tr35/tr35-dates.html#Metazone_Names
 
-NO_INHERITANCE_MARKER = u'\u2205\u2205\u2205'
+NO_INHERITANCE_MARKER = '\u2205\u2205\u2205'
 
 
 LC_TIME = default_locale('LC_TIME')
@@ -252,7 +250,7 @@ def get_next_timezone_transition(zone=None, dt=None):
     )
 
 
-class TimezoneTransition(object):
+class TimezoneTransition:
     """A helper object that represents the return value from
     :func:`get_next_timezone_transition`.
     """
@@ -469,18 +467,18 @@ def get_timezone_gmt(datetime=None, width='long', locale=LC_TIME, return_z=False
     if return_z and hours == 0 and seconds == 0:
         return 'Z'
     elif seconds == 0 and width == 'iso8601_short':
-        return u'%+03d' % hours
+        return '%+03d' % hours
     elif width == 'short' or width == 'iso8601_short':
-        pattern = u'%+03d%02d'
+        pattern = '%+03d%02d'
     elif width == 'iso8601':
-        pattern = u'%+03d:%02d'
+        pattern = '%+03d:%02d'
     else:
         pattern = locale.zone_formats['gmt'] % '%+03d:%02d'
     return pattern % (hours, seconds // 60)
 
 
 def get_timezone_location(dt_or_tzinfo=None, locale=LC_TIME, return_city=False):
-    u"""Return a representation of the given timezone using "location format".
+    """Return a representation of the given timezone using "location format".
 
     The result depends on both the local display name of the country and the
     city associated with the time zone:
@@ -952,10 +950,10 @@ def format_timedelta(delta, granularity='second', threshold=.85,
                     break
             # This really should not happen
             if pattern is None:
-                return u''
+                return ''
             return pattern.replace('{0}', str(value))
 
-    return u''
+    return ''
 
 
 def _format_fallback_interval(start, end, skeleton, tzinfo, locale):
@@ -1157,7 +1155,7 @@ def parse_date(string, locale=LC_TIME):
 
     indexes = [(year_idx, 'Y'), (month_idx, 'M'), (day_idx, 'D')]
     indexes.sort()
-    indexes = dict([(item[1], idx) for idx, item in enumerate(indexes)])
+    indexes = {item[1]: idx for idx, item in enumerate(indexes)}
 
     # FIXME: this currently only supports numbers, but should also support month
     #        names, both in the requested locale, and english
@@ -1199,7 +1197,7 @@ def parse_time(string, locale=LC_TIME):
 
     indexes = [(hour_idx, 'H'), (min_idx, 'M'), (sec_idx, 'S')]
     indexes.sort()
-    indexes = dict([(item[1], idx) for idx, item in enumerate(indexes)])
+    indexes = {item[1]: idx for idx, item in enumerate(indexes)}
 
     # FIXME: support 12 hour clock, and 0-based hour specification
     #        and seconds should be optional, maybe minutes too
@@ -1212,7 +1210,7 @@ def parse_time(string, locale=LC_TIME):
     return time(hour, minute, second)
 
 
-class DateTimePattern(object):
+class DateTimePattern:
 
     def __init__(self, pattern, format):
         self.pattern = pattern
@@ -1237,7 +1235,7 @@ class DateTimePattern(object):
         return self % DateTimeFormat(datetime, locale)
 
 
-class DateTimeFormat(object):
+class DateTimeFormat:
 
     def __init__(self, value, locale):
         assert isinstance(value, (date, datetime, time))
@@ -1591,7 +1589,7 @@ def parse_pattern(pattern):
         else:
             raise NotImplementedError("Unknown token type: %s" % tok_type)
 
-    _pattern_cache[pattern] = pat = DateTimePattern(pattern, u''.join(result))
+    _pattern_cache[pattern] = pat = DateTimePattern(pattern, ''.join(result))
     return pat
 
 

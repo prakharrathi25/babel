@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     babel.messages.catalog
     ~~~~~~~~~~~~~~~~~~~~~~
@@ -72,10 +71,10 @@ def _parse_datetime_header(value):
     return dt
 
 
-class Message(object):
+class Message:
     """Representation of a single message in a catalog."""
 
-    def __init__(self, id, string=u'', locations=(), flags=(), auto_comments=(),
+    def __init__(self, id, string='', locations=(), flags=(), auto_comments=(),
                  user_comments=(), previous_id=(), lineno=None, context=None):
         """Create the message object.
 
@@ -95,7 +94,7 @@ class Message(object):
         """
         self.id = id
         if not string and self.pluralizable:
-            string = (u'', u'')
+            string = ('', '')
         self.string = string
         self.locations = list(distinct(locations))
         self.flags = set(flags)
@@ -215,7 +214,7 @@ class TranslationError(Exception):
     translations are encountered."""
 
 
-DEFAULT_HEADER = u"""\
+DEFAULT_HEADER = """\
 # Translations template for PROJECT.
 # Copyright (C) YEAR ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
@@ -223,7 +222,7 @@ DEFAULT_HEADER = u"""\
 #"""
 
 
-class Catalog(object):
+class Catalog:
     """Representation of a message catalog."""
 
     def __init__(self, locale=None, domain=None, header_comment=DEFAULT_HEADER,
@@ -409,7 +408,7 @@ class Catalog(object):
             value = self._force_text(value, encoding=self.charset)
             if name == 'project-id-version':
                 parts = value.split(' ')
-                self.project = u' '.join(parts[:-1])
+                self.project = ' '.join(parts[:-1])
                 self.version = parts[-1]
             elif name == 'report-msgid-bugs-to':
                 self.msgid_bugs_address = value
@@ -555,7 +554,7 @@ class Catalog(object):
         flags = set()
         if self.fuzzy:
             flags |= {'fuzzy'}
-        yield Message(u'', '\n'.join(buf), flags=flags)
+        yield Message('', '\n'.join(buf), flags=flags)
         for key in self._messages:
             yield self._messages[key]
 
@@ -751,10 +750,10 @@ class Catalog(object):
         # Prepare for fuzzy matching
         fuzzy_candidates = []
         if not no_fuzzy_matching:
-            fuzzy_candidates = dict([
-                (self._key_for(msgid), messages[msgid].context)
+            fuzzy_candidates = {
+                self._key_for(msgid): messages[msgid].context
                 for msgid in messages if msgid and messages[msgid].string
-            ])
+            }
         fuzzy_matches = set()
 
         def _merge(message, oldkey, newkey):
@@ -779,7 +778,7 @@ class Catalog(object):
                 if not isinstance(message.string, (list, tuple)):
                     fuzzy = True
                     message.string = tuple(
-                        [message.string] + ([u''] * (len(message.id) - 1))
+                        [message.string] + ([''] * (len(message.id) - 1))
                     )
                 elif len(message.string) != self.num_plurals:
                     fuzzy = True
@@ -789,7 +788,7 @@ class Catalog(object):
                 message.string = message.string[0]
             message.flags |= oldmsg.flags
             if fuzzy:
-                message.flags |= {u'fuzzy'}
+                message.flags |= {'fuzzy'}
             self[message.id] = message
 
         for message in template:
